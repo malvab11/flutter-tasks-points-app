@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/features/loading/screens/loading_screen.dart';
+import 'package:mission_up/features/login/screens/login_screen.dart';
 import 'package:mission_up/features/presentation/screens/presentation_screen.dart';
 
 void main() {
@@ -14,10 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mission Up',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'loading',
+      initialRoute: 'login',
       routes: {
         'loading': (context) => const LoadingScreen(),
         'presentation': (context) => const PresentationScreen(),
+        'login': (context) => const LoginScreen(),
       },
     );
   }
