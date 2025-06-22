@@ -58,96 +58,109 @@ class LoginView extends StatelessWidget {
         backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Image.asset('assets/images/logo_app.png'),
-                const SizedBox(height: 24),
+      body: LoginContent(viewModel: viewModel),
+    );
+  }
+}
 
-                // Email
-                CommonTextField(
-                  controller: viewModel.emailController,
-                  placeholder: "Email o Celular",
-                  onIconTap: () {},
+class LoginContent extends StatelessWidget {
+  const LoginContent({super.key, required this.viewModel});
+
+  final LoginViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //Imagen de Aplicativo
+              Image.asset('assets/images/logo_app.png'),
+              const SizedBox(height: 24),
+
+              // Email
+              CommonTextField(
+                controller: viewModel.emailController,
+                placeholder: "Email o Celular",
+                onIconTap: () {},
+              ),
+              const SizedBox(height: 12),
+
+              // Contraseña
+              CommonTextField(
+                controller: viewModel.passwordController,
+                placeholder: "Contraseña",
+                isPassword: true,
+                isShown: viewModel.isShown,
+                onIconTap: viewModel.onIconTap,
+              ),
+              const SizedBox(height: 12),
+
+              //Boton de olvide contraseña
+              Align(
+                alignment: Alignment.centerRight,
+                child: CommonText(
+                  text: "¿Olvidaste tu contraseña?",
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
                 ),
-                const SizedBox(height: 12),
+              ),
 
-                // Contraseña
-                CommonTextField(
-                  controller: viewModel.passwordController,
-                  placeholder: "Contraseña",
-                  isPassword: true,
-                  isShown: viewModel.isShown,
-                  onIconTap: viewModel.onIconTap,
-                ),
-                const SizedBox(height: 12),
+              const SizedBox(height: 24),
 
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CommonText(
-                    text: "¿Olvidaste tu contraseña?",
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange,
+              // Botones
+              CommonOutlinedButton(
+                onPressed: () => viewModel.onLoginPressed(context),
+                text: "Iniciar Sesión",
+                fontSize: 16,
+                containerColor: Colors.green,
+              ),
+
+              CommonOutlinedButton(
+                onPressed: () => viewModel.onRegisterPressed(context),
+                text: "Registrarme",
+                fontSize: 16,
+                containerColor: Colors.orange,
+              ),
+
+              const CommonSpacer(size: 12),
+              const CommonText(text: "O", fontSize: 12),
+              const CommonSpacer(size: 12),
+
+              // Social buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CommonOutlinedButton(
+                    onPressed: () {},
+                    text: "Google",
+                    textColor: Colors.black,
+                    fontSize: 16,
+                    containerColor: Colors.white,
+                    icon: CommonIcon(
+                      size: 15,
+                      icon: Icons.g_mobiledata_rounded,
+                      tint: Colors.black,
+                    ),
                   ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Botones
-                CommonOutlinedButton(
-                  onPressed: () => viewModel.onLoginPressed(context),
-                  text: "Iniciar Sesión",
-                  fontSize: 16,
-                  containerColor: Colors.green,
-                ),
-
-                CommonOutlinedButton(
-                  onPressed: () => viewModel.onRegisterPressed(context),
-                  text: "Registrarme",
-                  fontSize: 16,
-                  containerColor: Colors.orange,
-                ),
-
-                const CommonSpacer(size: 12),
-                const CommonText(text: "O", fontSize: 12),
-                const CommonSpacer(size: 12),
-
-                // Social buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CommonOutlinedButton(
-                      onPressed: () {},
-                      text: "Google",
-                      textColor: Colors.black,
-                      fontSize: 16,
-                      containerColor: Colors.white,
-                      icon: CommonIcon(
-                        size: 15,
-                        icon: Icons.g_mobiledata_rounded,
-                        tint: Colors.black,
-                      ),
+                  const CommonSpacer(size: 12),
+                  CommonOutlinedButton(
+                    onPressed: () {},
+                    text: "Facebook",
+                    fontSize: 16,
+                    containerColor: Colors.blueAccent,
+                    icon: CommonIcon(
+                      size: 15,
+                      icon: Icons.facebook,
+                      tint: Colors.white,
                     ),
-                    const CommonSpacer(size: 12),
-                    CommonOutlinedButton(
-                      onPressed: () {},
-                      text: "Facebook",
-                      fontSize: 16,
-                      containerColor: Colors.blueAccent,
-                      icon: CommonIcon(
-                        size: 15,
-                        icon: Icons.facebook,
-                        tint: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
