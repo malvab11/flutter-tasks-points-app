@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mission_up/features/register/screens/register_tutor_view_model.dart';
+import 'package:mission_up/features/register_tutor/screens/register_tutor_view_model.dart';
 import 'package:mission_up/shared/widgets/common_icon.dart';
 import 'package:mission_up/shared/widgets/common_outlined_buttons.dart';
 import 'package:mission_up/shared/widgets/common_spacer.dart';
@@ -44,10 +44,7 @@ class RegisterTutorView extends StatelessWidget {
           size: 18,
           icon: Icons.arrow_back_ios_new,
           tint: Colors.orange,
-          onPressed: () {
-            viewModel.disposeControllers();
-            viewModel.back;
-          },
+          onPressed: () => viewModel.back(context),
         ),
         title: CommonText(
           text: "Registrarme",

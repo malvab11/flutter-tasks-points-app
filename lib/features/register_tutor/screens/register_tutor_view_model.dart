@@ -9,8 +9,10 @@ class RegisterTutorViewModel extends ChangeNotifier {
   bool get isShown => _isShown;
 
   void disposeControllers() {
+    userDataController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    rpasswordController.dispose();
   }
 
   void onIconTap() {
@@ -19,7 +21,7 @@ class RegisterTutorViewModel extends ChangeNotifier {
   }
 
   void back(BuildContext context) {
-    Navigator.pushNamed(context, 'login');
+    Navigator.pop(context);
   }
 
   bool formValidation() {

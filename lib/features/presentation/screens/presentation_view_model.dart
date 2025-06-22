@@ -27,6 +27,14 @@ class PresentationViewModel extends ChangeNotifier {
     });
   }
 
+  void onTutorPressed(BuildContext context) {
+    Navigator.pushNamed(context, 'login');
+  }
+
+  void onUserPressed(BuildContext context) {
+    Navigator.pushNamed(context, 'registerUser');
+  }
+
   void setCurrentIndex(int index) {
     if (_isDisposed) return;
     currentIndex = index;

@@ -14,8 +14,8 @@ class PresentationScreen extends StatelessWidget {
           children: [
             const Expanded(child: PresentationCarousel()),
             PresentationFooter(
-              onTutorTap: () => Navigator.pushNamed(context, 'loginTutor'),
-              onUserTap: () => Navigator.pushNamed(context, 'loginUser'),
+              onTutorTap: () => Navigator.pushNamed(context, 'login'),
+              onUserTap: () => Navigator.pushNamed(context, 'registerUser'),
             ),
           ],
         ),

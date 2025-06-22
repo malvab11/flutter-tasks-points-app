@@ -17,7 +17,8 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   void back(BuildContext context) {
-    Navigator.pushNamed(context, 'presentation');
+    debugPrint('yendo a login');
+    Navigator.pop(context);
   }
 
   bool formValidation() {
@@ -29,7 +30,7 @@ class LoginViewModel extends ChangeNotifier {
   void onLoginPressed(BuildContext context) {
     if (formValidation()) {
       //Navigator.pushNamed(context, 'loading');
-      print(
+      debugPrint(
         'Se esta enviando ${emailController.text} y ${passwordController.text}',
       );
     } else {

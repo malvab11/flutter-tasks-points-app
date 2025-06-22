@@ -44,10 +44,7 @@ class LoginView extends StatelessWidget {
           size: 18,
           icon: Icons.arrow_back_ios_new,
           tint: Colors.orange,
-          onPressed: () {
-            viewModel.disposeControllers();
-            viewModel.back;
-          },
+          onPressed: () => viewModel.back(context),
         ),
         title: CommonText(
           text: "Iniciar Sesión",
