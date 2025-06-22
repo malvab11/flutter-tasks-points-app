@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mission_up/features/loading/screens/loading_screen.dart';
 import 'package:mission_up/features/login/screens/login_screen.dart';
 import 'package:mission_up/features/presentation/screens/presentation_screen.dart';
+import 'package:mission_up/features/register/screens/register_tutor_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         'loading': (context) => const LoadingScreen(),
         'presentation': (context) => const PresentationScreen(),
         'login': (context) => const LoginScreen(),
+        'registerTutor': (context) => const RegisterTutorScreen(),
       },
     );
   }
