@@ -9,11 +9,11 @@ class TextStyles {
   );
   static TextStyle normalText = TextStyle(
     fontSize: 15,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.bold,
   );
   static TextStyle coins = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.normal,
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
     color: AppColors.coinColor,
   );
 }

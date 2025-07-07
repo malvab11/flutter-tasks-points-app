@@ -9,3 +9,11 @@ class ActivityEntity {
     this.done = false,
   });
 }
+
+class UserEntity {
+  final String user;
+  final int score;
+  final String tasks;
+
+  UserEntity({required this.score, required this.tasks, required this.user});
+}

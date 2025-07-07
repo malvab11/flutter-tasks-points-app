@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:mission_up/core/constants/activities_constants.dart';
+import 'package:mission_up/ui/screens/presentation/first_presentation_screen.dart';
+import 'package:mission_up/ui/screens/presentation/second_presentation_screen.dart';
+import 'package:mission_up/ui/screens/presentation/third_presentation_screen.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
-import 'package:mission_up/ui/styles/text_styles.dart';
-import 'package:mission_up/ui/widgets/common_activity_card.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
 
 class PresentationScreen extends StatefulWidget {
@@ -13,6 +15,14 @@ class PresentationScreen extends StatefulWidget {
 }
 
 class _PresentationScreenState extends State<PresentationScreen> {
+  int _currentPage = 0;
+
+  void updatePage(int newPage) {
+    setState(() {
+      _currentPage = newPage;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -22,10 +32,10 @@ class _PresentationScreenState extends State<PresentationScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: CarrouselPresentaciones(),
+                child: CarrouselPresentations(onPageChanged: updatePage),
               ),
             ),
-            const CarrouselIconos(),
+            CarrouselIconos(currentPage: _currentPage),
             const SizedBox(height: 12),
             const ButtonsSection(),
           ],
@@ -35,83 +45,85 @@ class _PresentationScreenState extends State<PresentationScreen> {
   }
 }
 
-class CarrouselPresentaciones extends StatelessWidget {
-  const CarrouselPresentaciones({super.key});
+class CarrouselPresentations extends StatefulWidget {
+  final Function(int) onPageChanged;
+  const CarrouselPresentations({super.key, required this.onPageChanged});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [PrimeraPresentacion()],
-    );
-  }
+  State<CarrouselPresentations> createState() => _CarrouselPresentationsState();
 }
 
-class PrimeraPresentacion extends StatelessWidget {
-  const PrimeraPresentacion({super.key});
+class _CarrouselPresentationsState extends State<CarrouselPresentations> {
+  late final PageController _pageController;
+  late final Timer _timer;
+  int _currentPresentation = 0;
+
+  final List<Widget> _presentaciones = const [
+    FirstPresentationScreen(),
+    SecondPresentationScreen(),
+    ThirdPresentationScreen(),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+
+    _timer = Timer.periodic(const Duration(seconds: 5), (it) {
+      _currentPresentation++;
+      if (_currentPresentation >= _presentaciones.length) {
+        _currentPresentation = 0;
+      }
+      _pageController.animateToPage(
+        _currentPresentation,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "Pequeñas tareas, grandes hábitos",
-          style: TextStyles.title,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: activitiesConstants.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: CommonActivityCard(activities: activitiesConstants[index]),
-            );
-          },
-        ),
-        const SizedBox(height: 24),
-      ],
+    return PageView(
+      controller: _pageController,
+      children: _presentaciones,
+      onPageChanged: (index) {
+        setState(() {
+          _currentPresentation = index;
+        });
+        widget.onPageChanged(index);
+      },
     );
   }
 }
 
 class CarrouselIconos extends StatelessWidget {
-  const CarrouselIconos({super.key});
+  final int currentPage;
+  const CarrouselIconos({super.key, required this.currentPage});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
+      children: List.generate(3, (index) {
+        final isActive = index == currentPage;
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 5),
           width: 15,
           height: 15,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.greenColor,
+            color: isActive ? AppColors.greenColor : AppColors.whiteColor,
           ),
-        ),
-        SizedBox(width: 10),
-        Container(
-          width: 15,
-          height: 15,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.whiteColor,
-          ),
-        ),
-        SizedBox(width: 10),
-        Container(
-          width: 15,
-          height: 15,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.whiteColor,
-          ),
-        ),
-      ],
+        );
+      }),
     );
   }
 }
@@ -122,8 +134,8 @@ class ButtonsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(15),
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12),
           topRight: Radius.circular(12),
@@ -132,7 +144,7 @@ class ButtonsSection extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: const [
           CommonButton(texto: "Soy Tutor", fondo: AppColors.greenColor),
           SizedBox(width: 12),
           CommonButton(texto: "Soy Alumno", fondo: AppColors.grayColor),

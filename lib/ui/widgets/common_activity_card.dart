@@ -57,3 +57,82 @@ class CommonActivityCard extends StatelessWidget {
     );
   }
 }
+
+class CommonRewardsCard extends StatelessWidget {
+  final ActivityEntity rewards;
+
+  const CommonRewardsCard({super.key, required this.rewards});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(rewards.activity, style: TextStyles.normalText),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(rewards.score.toString(), style: TextStyles.coins),
+            Icon(Icons.currency_bitcoin, color: AppColors.coinColor),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class CommonUserCard extends StatelessWidget {
+  final UserEntity users;
+  const CommonUserCard({super.key, required this.users});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: AppColors.blackColor,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.greenColor,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(users.user, style: TextStyles.normalText),
+                  Text(
+                    "${users.tasks} tareas realizadas",
+                    style: TextStyles.normalText,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text(users.score.toString(), style: TextStyles.coins),
+              const SizedBox(width: 12),
+              const Icon(
+                Icons.monetization_on_sharp,
+                color: AppColors.coinColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
