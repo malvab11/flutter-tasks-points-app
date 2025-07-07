@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/ui/screens/presentation/presentation_screen.dart';
+import 'package:mission_up/ui/viewmodels/presentation_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PresentationViewmodel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
