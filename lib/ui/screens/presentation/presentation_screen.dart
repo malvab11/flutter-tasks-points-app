@@ -105,10 +105,22 @@ class ButtonsSection extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          CommonButton(texto: "Soy Tutor", fondo: AppColors.greenColor),
+        children: [
+          Expanded(
+            child: CommonButton(
+              texto: "Soy Tutor",
+              fondo: AppColors.greenColor,
+              onPressed: () => Navigator.pushNamed(context, '/loginTutor'),
+            ),
+          ),
           SizedBox(width: 12),
-          CommonButton(texto: "Soy Alumno", fondo: AppColors.grayColor),
+          Expanded(
+            child: CommonButton(
+              texto: "Soy Alumno",
+              fondo: AppColors.grayColor,
+              onPressed: () => Navigator.pushNamed(context, '/loginUser'),
+            ),
+          ),
         ],
       ),
     );
