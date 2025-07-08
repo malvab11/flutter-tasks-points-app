@@ -4,7 +4,7 @@ import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
 import 'package:mission_up/ui/widgets/common_inputs.dart';
 import 'package:provider/provider.dart';
-import 'package:mission_up/ui/viewmodels/login_tutor_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 
 class LoginTutorScreen extends StatelessWidget {
   const LoginTutorScreen({super.key});

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/ui/screens/home/activities/activities_screen.dart';
+import 'package:mission_up/ui/screens/home/activities/create_activity_screen.dart';
+import 'package:mission_up/ui/screens/home/main_screen.dart';
 import 'package:mission_up/ui/screens/loading/loading_screen.dart';
 import 'package:mission_up/ui/screens/login/login_tutor_screen.dart';
 import 'package:mission_up/ui/screens/login/login_user_screen.dart';
 import 'package:mission_up/ui/screens/presentation/presentation_screen.dart';
 import 'package:mission_up/ui/screens/register/register_tutor_screen.dart';
-import 'package:mission_up/ui/viewmodels/login_tutor_viewmodel.dart';
-import 'package:mission_up/ui/viewmodels/login_user_viewmodel.dart';
-import 'package:mission_up/ui/viewmodels/presentation_viewmodel.dart';
-import 'package:mission_up/ui/viewmodels/register_tutor_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/main/main_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/register_tutor_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,6 +22,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => LoginTutorViewmodel()),
         ChangeNotifierProvider(create: (_) => RegisterTutorViewModel()),
         ChangeNotifierProvider(create: (_) => LoginUserViewmodel()),
+        ChangeNotifierProvider(create: (_) => MainViewmodel()),
       ],
       child: MyApp(),
     ),
@@ -38,8 +43,11 @@ class MyApp extends StatelessWidget {
         '/registerTutor': (context) => RegisterTutorScreen(),
         '/loginUser': (context) => LoginUserScreen(),
         '/loading': (context) => LoadingScreen(),
+        '/home': (context) => MainScreen(),
+        '/activities': (context) => ActivitiesScreen(),
+        '/createActivity': (context) => CreateActivityScreen(),
       },
-      home: PresentationScreen(),
+      home: MainScreen(),
     );
   }
 }

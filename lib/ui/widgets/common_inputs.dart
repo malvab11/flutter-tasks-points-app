@@ -10,6 +10,7 @@ class CommonInputs extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isPassword;
   final bool? isObscure;
+  final IconData? icon;
   final ValueChanged<String>? onChanged;
 
   const CommonInputs({
@@ -21,6 +22,7 @@ class CommonInputs extends StatelessWidget {
     this.onPressed,
     required this.isPassword,
     this.isObscure,
+    this.icon,
     this.onChanged,
   });
 
@@ -49,6 +51,8 @@ class CommonInputs extends StatelessWidget {
                           ? const Icon(Icons.visibility)
                           : const Icon(Icons.visibility_off),
                 )
+                : icon != null
+                ? Icon(icon)
                 : null,
       ),
     );

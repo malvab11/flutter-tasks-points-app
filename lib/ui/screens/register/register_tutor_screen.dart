@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
-import 'package:mission_up/ui/viewmodels/register_tutor_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/register_tutor_viewmodel.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
 import 'package:mission_up/ui/widgets/common_inputs.dart';
 import 'package:provider/provider.dart';
