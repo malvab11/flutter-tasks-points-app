@@ -84,7 +84,7 @@ class CommonRewardsCard extends StatelessWidget {
 }
 
 class CommonUserCard extends StatelessWidget {
-  final UserEntity users;
+  final UserEntity2 users;
   const CommonUserCard({super.key, required this.users});
 
   @override

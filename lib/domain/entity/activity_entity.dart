@@ -10,10 +10,10 @@ class ActivityEntity {
   });
 }
 
-class UserEntity {
+class UserEntity2 {
   final String user;
   final int score;
   final String tasks;
 
-  UserEntity({required this.score, required this.tasks, required this.user});
+  UserEntity2({required this.score, required this.tasks, required this.user});
 }

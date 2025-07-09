@@ -60,7 +60,7 @@ class _ProfileBody extends StatelessWidget {
       children: [
         CommonCard(
           text: 'Información',
-          icon: Icons.account_circle_rounded,
+          icon: Icons.account_circle,
           onTap: () {},
         ),
         CommonCard(text: 'Contraseña', icon: Icons.visibility, onTap: () {}),

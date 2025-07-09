@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mission_up/ui/screens/home/activities/activities_screen.dart';
-import 'package:mission_up/ui/screens/home/activities/create_activity_screen.dart';
-import 'package:mission_up/ui/screens/home/main_screen.dart';
-import 'package:mission_up/ui/screens/loading/loading_screen.dart';
-import 'package:mission_up/ui/screens/login/login_tutor_screen.dart';
-import 'package:mission_up/ui/screens/login/login_user_screen.dart';
+import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/screens/presentation/presentation_screen.dart';
-import 'package:mission_up/ui/screens/register/register_tutor_screen.dart';
 import 'package:mission_up/ui/viewmodels/main/main_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/register_tutor_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiProvider(
       providers: [
@@ -38,16 +36,11 @@ class MyApp extends StatelessWidget {
       title: 'Mission Up',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.dark()),
+      initialRoute: '/',
       routes: {
-        '/loginTutor': (context) => LoginTutorScreen(),
-        '/registerTutor': (context) => RegisterTutorScreen(),
-        '/loginUser': (context) => LoginUserScreen(),
-        '/loading': (context) => LoadingScreen(),
-        '/home': (context) => MainScreen(),
-        '/activities': (context) => ActivitiesScreen(),
-        '/createActivity': (context) => CreateActivityScreen(),
+        '/': (context) => const PresentationScreen(),
+        ...AppRoutes.routes,
       },
-      home: MainScreen(),
     );
   }
 }

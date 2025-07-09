@@ -13,8 +13,8 @@ final List<ActivityEntity> rewardsConstants = [
   ActivityEntity(activity: "Salida a Jugar", score: 10),
 ];
 
-final List<UserEntity> userConstants = [
-  UserEntity(score: 8, tasks: "2/10", user: "Marlon"),
-  UserEntity(score: 0, tasks: "0/10", user: "Paolo"),
-  UserEntity(score: 17, tasks: "10/10", user: "Julio"),
+final List<UserEntity2> userConstants = [
+  UserEntity2(score: 8, tasks: "2/10", user: "Marlon"),
+  UserEntity2(score: 0, tasks: "0/10", user: "Paolo"),
+  UserEntity2(score: 17, tasks: "10/10", user: "Julio"),
 ];
