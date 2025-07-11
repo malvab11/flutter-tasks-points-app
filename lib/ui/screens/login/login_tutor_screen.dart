@@ -4,10 +4,30 @@ import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
 import 'package:mission_up/ui/widgets/common_inputs.dart';
 import 'package:provider/provider.dart';
+import 'package:mission_up/data/datasources/auth/auth_datasource_impl.dart';
+import 'package:mission_up/data/repositories/auth_repositoryImpl.dart';
+import 'package:mission_up/domain/usecases/auth/login_with_email_usecase.dart';
+import 'package:mission_up/domain/usecases/auth/login_with_social_usecase.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 
 class LoginTutorScreen extends StatelessWidget {
   const LoginTutorScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create:
+          (_) => LoginTutorViewmodel(
+            LoginWithEmailUsecase(AuthRepositoryImpl(AuthDatasourceImpl())),
+            LoginWithSocialUsecase(AuthRepositoryImpl(AuthDatasourceImpl())),
+          ),
+      child: const _LoginTutorScreenBody(),
+    );
+  }
+}
+
+class _LoginTutorScreenBody extends StatelessWidget {
+  const _LoginTutorScreenBody();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +36,7 @@ class LoginTutorScreen extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => {Navigator.pop(context)},
             icon: Icon(Icons.arrow_back, color: AppColors.coinColor),
           ),
         ),
@@ -64,6 +84,7 @@ class _InputsLogin extends StatelessWidget {
               controller: viewModel.email,
               keyboardType: TextInputType.emailAddress,
               label: "Email",
+              errorText: viewModel.errorMessage,
               isPassword: false,
               onChanged: (_) => viewModel.loginButtonValidation(),
             ),
@@ -71,6 +92,7 @@ class _InputsLogin extends StatelessWidget {
               controller: viewModel.password,
               keyboardType: TextInputType.visiblePassword,
               label: "Contraseña",
+              errorText: viewModel.errorMessage,
               isPassword: true,
               isObscure: viewModel.isObscure,
               onPressed: () => viewModel.passwordVisibility(),
@@ -94,21 +116,34 @@ class _LoginButtons extends StatelessWidget {
     return Column(
       spacing: 20,
       children: [
-        CommonButton(
-          texto: "Iniciar Sesión",
-          fondo: AppColors.greenColor,
-          onPressed:
-              viewModel.isEnabled
-                  ? () {
-                    Navigator.pushNamed(context, '/loading');
-                  }
-                  : null,
-        ),
+        viewModel.isLoading
+            ? const CircularProgressIndicator()
+            : CommonButton(
+              texto: "Iniciar Sesión",
+              fondo: AppColors.greenColor,
+              onPressed:
+                  viewModel.isEnabled
+                      ? () async {
+                        await viewModel.loginWithEmail();
+                        if (viewModel.errorMessage == null &&
+                            viewModel.user != null) {
+                          Navigator.pushNamed(context, '/loading');
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(viewModel.errorMessage ?? 'Error'),
+                            ),
+                          );
+                        }
+                      }
+                      : null,
+            ),
         CommonButton(
           texto: "Registrarme",
           fondo: AppColors.coinColor,
           onPressed: () {
             Navigator.pushNamed(context, '/registerTutor');
+            viewModel.clearControllers();
           },
         ),
       ],
@@ -127,8 +162,19 @@ class _SocialMediaButtons extends StatelessWidget {
             texto: "Google",
             fondo: AppColors.whiteColor,
             textStyle: TextStyles.buttonTextWhite,
-            onPressed: () {
-              //Navigator.pushNamed(context, '/register');
+            onPressed: () async {
+              final viewModel = Provider.of<LoginTutorViewmodel>(
+                context,
+                listen: false,
+              );
+              await viewModel.loginWithSocial();
+              if (viewModel.errorMessage == null && viewModel.user != null) {
+                Navigator.pushNamed(context, '/loading');
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(viewModel.errorMessage ?? 'Error')),
+                );
+              }
             },
           ),
         ),

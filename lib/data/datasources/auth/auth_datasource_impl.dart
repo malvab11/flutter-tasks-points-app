@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,6 +9,23 @@ import 'package:mission_up/data/models/user_model.dart';
 class AuthDatasourceImpl extends AuthDatasource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<String> _generateInviteCode() async {
+    const chars = '0123456789';
+    final random = Random();
+    String code;
+    bool exists = true;
+
+    // Genera hasta encontrar uno único
+    do {
+      code =
+          List.generate(6, (_) => chars[random.nextInt(chars.length)]).join();
+      final doc = await _firestore.collection('familys').doc(code).get();
+      exists = doc.exists;
+    } while (exists);
+
+    return code;
+  }
 
   @override
   Future<UserModel?> getCurrentUser() async {
@@ -30,18 +49,22 @@ class AuthDatasourceImpl extends AuthDatasource {
     required String user,
     required String code,
   }) async {
-    // 1. Validar que el código de familia exista
-    final familiaDoc = await _firestore.collection('familias').doc(code).get();
+    final userTrimmed = user.trim();
+    final codeTrimmed = code.trim();
+
+    // 1. Verificar que el código de familia exista
+    final familiaDoc =
+        await _firestore.collection('familys').doc(codeTrimmed).get();
     if (!familiaDoc.exists) {
       throw Exception('El código de familia no existe');
     }
 
-    // 2. Buscar si ya existe ese usuario con ese código
+    // 2. Buscar si ya existe ese alumno con ese nombre y código
     final query =
         await _firestore
             .collection('users')
-            .where('user', isEqualTo: user.trim())
-            .where('codigoFamilia', isEqualTo: code)
+            .where('user', isEqualTo: userTrimmed)
+            .where('codigoFamilia', isEqualTo: codeTrimmed)
             .limit(1)
             .get();
 
@@ -50,19 +73,22 @@ class AuthDatasourceImpl extends AuthDatasource {
       return UserModel.fromJson(doc.data(), doc.id);
     }
 
-    // 3. Si no existe, crear el usuario automáticamente
-    final newDoc = _firestore.collection('users').doc();
+    // 3. Autenticar al alumno de forma anónima
+    final userCredential = await FirebaseAuth.instance.signInAnonymously();
+    final uid = userCredential.user!.uid;
 
+    // 4. Crear usuario en Firestore
     final newUser = UserModel(
-      uid: newDoc.id,
-      email: '', // Sin email
-      user: user.trim(),
+      uid: uid,
+      email: '',
+      user: userTrimmed,
       rol: 'user',
       photoUrl: null,
-      //codigoFamilia: code,
+      codigoFamilia: codeTrimmed,
     );
 
-    await newDoc.set(newUser.toJson());
+    await _firestore.collection('users').doc(uid).set(newUser.toJson());
+
     return newUser;
   }
 
@@ -131,19 +157,30 @@ class AuthDatasourceImpl extends AuthDatasource {
       password: password,
     );
 
+    final uid = data.user!.uid;
+    String? codigoFamilia;
+
+    // Si el rol es tutor, generar código de invitación único y crear familia
+    if (rol == 'tutor') {
+      codigoFamilia = await _generateInviteCode();
+
+      await _firestore.collection('familys').doc(codigoFamilia).set({
+        'tutorId': uid,
+        'tutorName': user,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+
     final userModel = UserModel(
-      uid: data.user!.uid,
+      uid: uid,
       email: email,
       rol: rol,
       user: user,
       photoUrl: null,
+      codigoFamilia: codigoFamilia,
     );
 
-    await _firestore
-        .collection('users')
-        .doc(userModel.uid)
-        .set(userModel.toJson());
-
+    await _firestore.collection('users').doc(uid).set(userModel.toJson());
     return userModel;
   }
 }

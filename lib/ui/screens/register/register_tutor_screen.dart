@@ -29,10 +29,6 @@ class RegisterTutorScreen extends StatelessWidget {
               _InputsRegister(),
               const SizedBox(height: 20),
               _RegisterButtons(),
-              const SizedBox(height: 10),
-              Text("o", style: TextStyles.normalText),
-              const SizedBox(height: 10),
-              _SocialMediaButtons(),
             ],
           ),
         ),
@@ -116,47 +112,28 @@ class _RegisterButtons extends StatelessWidget {
     return Column(
       spacing: 20,
       children: [
-        CommonButton(
-          texto: "Registrarme",
-          fondo: AppColors.coinColor,
-          onPressed:
-              viewModel.isEnabled
-                  ? () {
-                    //Navigator.pushNamed(context, '/dashboard');
-                  }
-                  : null,
-        ),
-      ],
-    );
-  }
-}
-
-class _SocialMediaButtons extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      spacing: 20,
-      children: [
-        Expanded(
-          child: CommonButton(
-            texto: "Google",
-            fondo: AppColors.whiteColor,
-            textStyle: TextStyles.buttonTextWhite,
-            onPressed: () {
-              //Navigator.pushNamed(context, '/register');
-            },
-          ),
-        ),
-        Expanded(
-          child: CommonButton(
-            texto: "Facebook",
-            fondo: AppColors.blueColor,
-            icon: Icons.facebook,
-            onPressed: () {
-              //Navigator.pushNamed(context, '/register');
-            },
-          ),
-        ),
+        viewModel.isLoading
+            ? const CircularProgressIndicator()
+            : CommonButton(
+              texto: "Registrarme",
+              fondo: AppColors.coinColor,
+              onPressed:
+                  viewModel.isEnabled
+                      ? () async {
+                        await viewModel.registerTutor();
+                        if (viewModel.registeredUser != null) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('holi')));
+                          //Navigator.pop(context);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(viewModel.errorService)),
+                          );
+                        }
+                      }
+                      : null,
+            ),
       ],
     );
   }
