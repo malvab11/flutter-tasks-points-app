@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/viewmodels/presentation/register_tutor_viewmodel.dart';
@@ -8,6 +9,18 @@ import 'package:provider/provider.dart';
 
 class RegisterTutorScreen extends StatelessWidget {
   const RegisterTutorScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => di<RegisterTutorViewModel>(),
+      child: const _RegisterTutorScreenBody(),
+    );
+  }
+}
+
+class _RegisterTutorScreenBody extends StatelessWidget {
+  const _RegisterTutorScreenBody();
 
   @override
   Widget build(BuildContext context) {

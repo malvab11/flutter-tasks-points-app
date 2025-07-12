@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/screens/home/activities/activities_screen.dart';
 import 'package:mission_up/ui/screens/home/init/init_screen.dart';
 import 'package:mission_up/ui/screens/home/profile/profile_screen.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
-import 'package:mission_up/ui/viewmodels/main/main_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/home/main_viewmodel.dart';
 import 'package:provider/provider.dart';
+
+class MainScreenWrapper extends StatelessWidget {
+  const MainScreenWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => di<MainViewmodel>(),
+      child: MainScreen(),
+    );
+  }
+}
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -38,7 +51,7 @@ class MainScreen extends StatelessWidget {
               user: viewModel.user!.user,
               code: viewModel.user!.familyCode,
             ),
-            ActivitiesScreen(),
+            ActivitiesScreen(uid: viewModel.user!.id),
             ProfileScreen(
               user: viewModel.user!.user,
               email: viewModel.user!.email,

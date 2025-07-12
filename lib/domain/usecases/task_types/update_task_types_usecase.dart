@@ -3,7 +3,7 @@ import 'package:mission_up/domain/repositories/task_type_repository.dart';
 class UpdateTaskTypesUsecase {
   TaskTypeRepository repository;
 
-  UpdateTaskTypesUsecase({required this.repository});
+  UpdateTaskTypesUsecase(this.repository);
 
   Future<void> call({
     required String taskTypeId,

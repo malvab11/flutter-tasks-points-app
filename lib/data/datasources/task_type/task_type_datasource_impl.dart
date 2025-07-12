@@ -15,7 +15,7 @@ class TaskTypeDatasourceImpl extends TaskTypeDatasource {
   }
 
   @override
-  Future<List<TaskTypeModel>?> getTaskTypes({required String uid}) async {
+  Future<List<TaskTypeModel>> getTaskTypes({required String uid}) async {
     try {
       final tasksDoc =
           await _firestore

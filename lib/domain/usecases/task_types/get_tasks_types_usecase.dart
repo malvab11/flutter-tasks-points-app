@@ -4,9 +4,9 @@ import 'package:mission_up/domain/repositories/task_type_repository.dart';
 class GetTasksTypesUsecase {
   final TaskTypeRepository repository;
 
-  GetTasksTypesUsecase({required this.repository});
+  GetTasksTypesUsecase(this.repository);
 
-  Future<List<TaskTypeEntity>?> call({required String uid}) {
+  Future<List<TaskTypeEntity>> call({required String uid}) {
     return repository.getTaskTypes(uid: uid);
   }
 }

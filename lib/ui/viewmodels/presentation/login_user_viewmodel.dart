@@ -72,4 +72,10 @@ class LoginUserViewmodel extends ChangeNotifier {
       _setLoading(false);
     }
   }
+
+  //Clear Controllers
+  void clearControllers() {
+    _userDataController.clear();
+    _familyCodeController.clear();
+  }
 }

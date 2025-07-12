@@ -11,7 +11,7 @@ class LoginTutorViewmodel extends ChangeNotifier {
   final TextEditingController _passwordController = TextEditingController();
 
   // Use Cases
-  final LoginWithEmailUsecase _loginWithEmailUsecase;
+  final LoginWithEmailUseCase _loginWithEmailUsecase;
   final LoginWithSocialUsecase _loginWithSocialUsecase;
 
   LoginTutorViewmodel(

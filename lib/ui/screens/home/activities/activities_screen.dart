@@ -1,38 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
+import 'package:mission_up/ui/viewmodels/home/task_type_viewmodel.dart';
 import 'package:mission_up/ui/widgets/common_activity_card.dart';
 import 'package:mission_up/ui/widgets/common_inputs.dart';
+import 'package:provider/provider.dart';
 
-/// Pantalla que muestra las actividades divididas por secciones:
-/// - Header: título e input de búsqueda.
-/// - Body: secciones de Tareas, Premios y Castigos con scroll.
 class ActivitiesScreen extends StatelessWidget {
-  const ActivitiesScreen({super.key});
+  final String? uid;
+  const ActivitiesScreen({super.key, this.uid});
 
   @override
   Widget build(BuildContext context) {
-    final searchController = TextEditingController();
+    return ChangeNotifierProvider(
+      create: (_) {
+        final viewModel = di<TaskTypeViewmodel>();
+        viewModel.init(uid!); // carga inicial
+        return viewModel;
+      },
+      child: const _ActivitiesScreenBody(),
+    );
+  }
+}
+
+class _ActivitiesScreenBody extends StatelessWidget {
+  const _ActivitiesScreenBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<TaskTypeViewmodel>();
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Sección fija (no se desplaza al hacer scroll)
-          _ActivitiesHeader(controller: searchController),
+          _ActivitiesHeader(controller: viewModel.search),
 
           const SizedBox(height: 20),
 
-          /// Sección desplazable con scroll: tareas, premios y castigos
-          const Expanded(child: _ActivitiesBody()),
+          if (viewModel.isLoading)
+            const Expanded(child: Center(child: CircularProgressIndicator()))
+          else if (viewModel.errorService?.isNotEmpty == true)
+            Expanded(child: Center(child: Text(viewModel.errorService!)))
+          else
+            const Expanded(child: _ActivitiesBody()),
         ],
       ),
     );
   }
 }
 
-/// Header con título y campo de búsqueda.
-/// Esta parte se mantiene fija al hacer scroll.
 class _ActivitiesHeader extends StatelessWidget {
   final TextEditingController controller;
 
@@ -40,6 +58,7 @@ class _ActivitiesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.read<TaskTypeViewmodel>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -51,40 +70,51 @@ class _ActivitiesHeader extends StatelessWidget {
           label: 'Buscar',
           isPassword: false,
           icon: Icons.search,
+          onChanged: (_) => viewModel.applyFilter(),
         ),
       ],
     );
   }
 }
 
-/// Cuerpo de la pantalla con scroll vertical.
-/// Incluye secciones: Tareas, Premios, Castigos.
 class _ActivitiesBody extends StatelessWidget {
   const _ActivitiesBody();
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          _ActivitySection(title: 'Tareas'),
-          SizedBox(height: 20),
-          _ActivitySection(title: 'Premios'),
-          SizedBox(height: 20),
-          _ActivitySection(title: 'Castigos'),
-        ],
-      ),
+    return Consumer<TaskTypeViewmodel>(
+      builder: (_, viewModel, __) {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ActivitySection(
+                title: 'Tareas',
+                activities: viewModel.tasksByType('Tareas'),
+              ),
+              const SizedBox(height: 20),
+              _ActivitySection(
+                title: 'Premios',
+                activities: viewModel.tasksByType('Premios'),
+              ),
+              const SizedBox(height: 20),
+              _ActivitySection(
+                title: 'Castigos',
+                activities: viewModel.tasksByType('Castigos'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
 
-/// Componente reutilizable para renderizar una sección de actividades.
-/// Puede adaptarse a tareas, premios o castigos.
 class _ActivitySection extends StatelessWidget {
   final String title;
+  final List activities;
 
-  const _ActivitySection({required this.title});
+  const _ActivitySection({required this.title, required this.activities});
 
   @override
   Widget build(BuildContext context) {
@@ -93,21 +123,24 @@ class _ActivitySection extends StatelessWidget {
       children: [
         Text(title, style: TextStyles.title),
         const SizedBox(height: 12),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (context, index) => const SizedBox(height: 20),
-          itemCount: 3, // ← aquí conectarás con Firestore
-          itemBuilder: (context, index) {
-            return CommonTutorActivityCard(
-              text: 'Participar en clase',
-              icon: Icons.monetization_on,
-              onTap: () {
-                // acción específica
+        activities.isEmpty
+            ? Text('No hay actividades', style: TextStyles.normalText)
+            : ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: activities.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (_, index) {
+                final activity = activities[index];
+                return CommonTutorActivityCard(
+                  text: activity.title,
+                  icon:
+                      Icons
+                          .monetization_on, // puedes personalizar esto por tipo
+                  onTap: () {},
+                );
               },
-            );
-          },
-        ),
+            ),
       ],
     );
   }

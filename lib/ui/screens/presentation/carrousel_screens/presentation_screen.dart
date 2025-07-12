@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:mission_up/ui/screens/presentation/first_presentation_screen.dart';
-import 'package:mission_up/ui/screens/presentation/second_presentation_screen.dart';
-import 'package:mission_up/ui/screens/presentation/third_presentation_screen.dart';
+import 'package:mission_up/ui/screens/presentation/carrousel_screens/first_presentation_screen.dart';
+import 'package:mission_up/ui/screens/presentation/carrousel_screens/second_presentation_screen.dart';
+import 'package:mission_up/ui/screens/presentation/carrousel_screens/third_presentation_screen.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
 import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';

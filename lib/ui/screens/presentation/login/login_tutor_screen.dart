@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
 import 'package:mission_up/ui/widgets/common_inputs.dart';
 import 'package:provider/provider.dart';
-import 'package:mission_up/data/datasources/auth/auth_datasource_impl.dart';
-import 'package:mission_up/data/repositories/auth_repositoryImpl.dart';
-import 'package:mission_up/domain/usecases/auth/login_with_email_usecase.dart';
-import 'package:mission_up/domain/usecases/auth/login_with_social_usecase.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 
 class LoginTutorScreen extends StatelessWidget {
@@ -16,11 +13,7 @@ class LoginTutorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create:
-          (_) => LoginTutorViewmodel(
-            LoginWithEmailUsecase(AuthRepositoryImpl(AuthDatasourceImpl())),
-            LoginWithSocialUsecase(AuthRepositoryImpl(AuthDatasourceImpl())),
-          ),
+      create: (_) => di<LoginTutorViewmodel>(),
       child: const _LoginTutorScreenBody(),
     );
   }

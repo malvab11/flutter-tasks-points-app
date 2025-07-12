@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
@@ -11,12 +12,28 @@ class LoginUserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => di<LoginUserViewmodel>(),
+      child: _LoginUserScreenBody(),
+    );
+  }
+}
+
+class _LoginUserScreenBody extends StatelessWidget {
+  const _LoginUserScreenBody();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.read<LoginUserViewmodel>();
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              viewModel.clearControllers();
+              Navigator.pop(context);
+            },
             icon: Icon(Icons.arrow_back, color: AppColors.coinColor),
           ),
         ),

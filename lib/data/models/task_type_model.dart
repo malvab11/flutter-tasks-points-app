@@ -24,7 +24,7 @@ class TaskTypeModel {
       title: json['title'] ?? '',
       description: json['description'],
       isDeleted: json['isDeleted'] ?? false,
-      createdBy: json['createdBy'] ?? '',
+      createdBy: json['createdBy'],
       createdAt: json['createdAt'] ?? Timestamp.now(),
     );
   }

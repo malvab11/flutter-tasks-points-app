@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/screens/home/activities/activities_screen.dart';
 import 'package:mission_up/ui/screens/home/activities/create_activity_screen.dart';
 import 'package:mission_up/ui/screens/home/main_screen.dart';
-import 'package:mission_up/ui/screens/loading/loading_screen.dart';
-import 'package:mission_up/ui/screens/login/login_tutor_screen.dart';
-import 'package:mission_up/ui/screens/login/login_user_screen.dart';
-import 'package:mission_up/ui/screens/register/register_tutor_screen.dart';
+import 'package:mission_up/ui/screens/presentation/loading/loading_screen.dart';
+import 'package:mission_up/ui/screens/presentation/login/login_tutor_screen.dart';
+import 'package:mission_up/ui/screens/presentation/login/login_user_screen.dart';
+import 'package:mission_up/ui/screens/presentation/register/register_tutor_screen.dart';
+import 'package:mission_up/ui/viewmodels/home/main_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/home/task_type_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/presentation/register_tutor_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class AppRoutes {
   static const String loginTutor = '/loginTutor';
@@ -17,12 +24,32 @@ class AppRoutes {
   static const String createActivity = '/createActivity';
 
   static Map<String, WidgetBuilder> get routes => {
-    loginTutor: (context) => const LoginTutorScreen(),
-    registerTutor: (context) => const RegisterTutorScreen(),
-    loginUser: (context) => const LoginUserScreen(),
+    loginTutor:
+        (context) => ChangeNotifierProvider(
+          create: (_) => di<LoginTutorViewmodel>(),
+          child: const LoginTutorScreen(),
+        ),
+    registerTutor:
+        (context) => ChangeNotifierProvider(
+          create: (_) => di<RegisterTutorViewModel>(),
+          child: const RegisterTutorScreen(),
+        ),
+    loginUser:
+        (context) => ChangeNotifierProvider(
+          create: (_) => di<LoginUserViewmodel>(),
+          child: const LoginUserScreen(),
+        ),
     loading: (context) => const LoadingScreen(),
-    home: (context) => MainScreen(),
-    activities: (context) => const ActivitiesScreen(),
+    home:
+        (context) => ChangeNotifierProvider(
+          create: (_) => di<MainViewmodel>(),
+          child: const MainScreenWrapper(),
+        ),
+    activities:
+        (context) => ChangeNotifierProvider(
+          create: (_) => di<TaskTypeViewmodel>(),
+          child: const ActivitiesScreen(),
+        ),
     createActivity: (context) => const CreateActivityScreen(),
   };
 }

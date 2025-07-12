@@ -6,7 +6,7 @@ import 'package:mission_up/domain/repositories/task_type_repository.dart';
 class TaskTypeRepositoryImpl extends TaskTypeRepository {
   final TaskTypeDatasource datasource;
 
-  TaskTypeRepositoryImpl({required this.datasource});
+  TaskTypeRepositoryImpl(this.datasource);
   @override
   Future<void> createTaskType({required TaskTypeEntity taskType}) async {
     final task = TaskTypeModel.fromEntity(taskType);
@@ -14,7 +14,7 @@ class TaskTypeRepositoryImpl extends TaskTypeRepository {
   }
 
   @override
-  Future<List<TaskTypeEntity>?> getTaskTypes({required String uid}) async {
+  Future<List<TaskTypeEntity>> getTaskTypes({required String uid}) async {
     final tasks = await datasource.getTaskTypes(uid: uid);
     return tasks.map((it) => it.toEntity()).toList();
   }
