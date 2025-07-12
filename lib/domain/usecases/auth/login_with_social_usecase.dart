@@ -6,7 +6,11 @@ class LoginWithSocialUsecase {
 
   LoginWithSocialUsecase(this.repository);
 
-  Future<UserEntity?> call(String rol) {
-    return repository.loginWithGoogle(rol: rol);
+  Future<UserEntity?> call() {
+    return repository.loginWithGoogle();
   }
+
+  // Future<UserEntity?> callFacebook() {
+  //   return repository.loginWithFacebook();
+  // }
 }

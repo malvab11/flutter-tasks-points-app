@@ -5,7 +5,9 @@ import '../../../../core/constants/activities_constants.dart';
 import '../../../styles/text_styles.dart';
 
 class InitScreen extends StatelessWidget {
-  const InitScreen({super.key});
+  final String user;
+  final String code;
+  const InitScreen({super.key, required this.user, required this.code});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class InitScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _InitHeader(controller: searchController),
+            _InitHeader(controller: searchController, user: user, code: code),
             const SizedBox(height: 20),
             _UsersSection(),
             const SizedBox(height: 20),
@@ -35,18 +37,24 @@ class InitScreen extends StatelessWidget {
 
 class _InitHeader extends StatelessWidget {
   final TextEditingController controller;
+  final String user;
+  final String code;
 
-  const _InitHeader({required this.controller});
+  const _InitHeader({
+    required this.controller,
+    required this.user,
+    required this.code,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Bienvenido, David', style: TextStyles.title),
+        Text('Bienvenido, $user', style: TextStyles.title),
         const SizedBox(height: 12),
         CommonCard(
-          text: 'Codigo de Familia : 021932',
+          text: 'Codigo de Familia : $code',
           icon: Icons.copy,
           onTap: () {},
         ),

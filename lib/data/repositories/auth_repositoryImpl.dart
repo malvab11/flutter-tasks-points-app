@@ -8,9 +8,9 @@ class AuthRepositoryImpl extends AuthRepository {
   AuthRepositoryImpl(this.datasource);
 
   @override
-  Future<UserEntity?> getCurrentUser() async {
+  Future<UserEntity> getCurrentUser() async {
     final model = await datasource.getCurrentUser();
-    return model?.toEntity();
+    return model.toEntity();
   }
 
   @override
@@ -19,9 +19,12 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<UserEntity> loginWithCode({
     required String user,
-    required String code,
+    required String familyCode,
   }) async {
-    final model = await datasource.loginWithCode(user: user, code: code);
+    final model = await datasource.loginWithCode(
+      user: user,
+      familyCode: familyCode,
+    );
     return model.toEntity();
   }
 
@@ -38,9 +41,9 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<UserEntity?> loginWithGoogle({required String rol}) async {
-    final model = await datasource.loginWithGoogle(rol: rol);
-    return model?.toEntity();
+  Future<UserEntity?> loginWithGoogle() async {
+    final model = await datasource.loginWithGoogle();
+    return model!.toEntity();
   }
 
   @override
@@ -48,13 +51,11 @@ class AuthRepositoryImpl extends AuthRepository {
     required String email,
     required String user,
     required String password,
-    required String rol,
   }) async {
     final model = await datasource.registerWithEmail(
       email: email,
       user: user,
       password: password,
-      rol: rol,
     );
     return model.toEntity();
   }

@@ -6,7 +6,7 @@ class LoginWithCodeUsecase {
 
   LoginWithCodeUsecase(this.repository);
 
-  Future<UserEntity> call(String user, String code) {
-    return repository.loginWithCode(user: user, code: code);
+  Future<UserEntity> call({required String user, required String familyCode}) {
+    return repository.loginWithCode(user: user, familyCode: familyCode);
   }
 }

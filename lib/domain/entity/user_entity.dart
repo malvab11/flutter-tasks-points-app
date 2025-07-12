@@ -1,15 +1,15 @@
 class UserEntity {
-  final String uid;
+  final String id;
   final String email;
-  final String? user;
-  final String? photoUrl; //foto del usuario y tutor, aplicación más adelante
+  final String user;
   final String rol; //rol del usuario Tutor o Estudiante
+  final String familyCode;
 
   UserEntity({
-    required this.uid,
+    required this.id,
     required this.email,
-    this.user,
-    this.photoUrl,
+    required this.user,
     required this.rol,
+    required this.familyCode,
   });
 }

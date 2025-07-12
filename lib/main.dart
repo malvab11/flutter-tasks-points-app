@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mission_up/data/repositories/family_repository_impl.dart';
-import 'package:mission_up/domain/usecases/auth/generate_family_code_usecase.dart';
-import 'package:mission_up/domain/usecases/auth/save_family_code_usecase.dart';
+import 'package:mission_up/domain/usecases/auth/login_with_code_usecase.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mission_up/firebase_options.dart';
@@ -12,15 +10,12 @@ import 'package:mission_up/ui/screens/presentation/presentation_screen.dart';
 // Viewmodels
 import 'package:mission_up/ui/viewmodels/main/main_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';
-import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/register_tutor_viewmodel.dart';
 
 // Data y dominio
 import 'package:mission_up/data/datasources/auth/auth_datasource_impl.dart';
 import 'package:mission_up/data/repositories/auth_repositoryImpl.dart';
-import 'package:mission_up/domain/usecases/auth/login_with_email_usecase.dart';
-import 'package:mission_up/domain/usecases/auth/login_with_social_usecase.dart';
 import 'package:mission_up/domain/usecases/auth/register_with_email_usecase.dart';
 
 void main() async {
@@ -29,7 +24,6 @@ void main() async {
 
   final authDatasource = AuthDatasourceImpl();
   final authRepository = AuthRepositoryImpl(authDatasource);
-  final familyRepository = FamilyRepositoryImpl();
 
   runApp(
     MultiProvider(
@@ -39,11 +33,12 @@ void main() async {
           create:
               (_) => RegisterTutorViewModel(
                 RegisterWithEmailUseCase(authRepository),
-                GenerateFamilyCodeUsecase(),
-                SaveFamilyCodeUsecase(familyRepository),
               ),
         ),
-        ChangeNotifierProvider(create: (_) => LoginUserViewmodel()),
+        ChangeNotifierProvider(
+          create:
+              (_) => LoginUserViewmodel(LoginWithCodeUsecase(authRepository)),
+        ),
         ChangeNotifierProvider(create: (_) => MainViewmodel()),
       ],
       child: const MyApp(),

@@ -84,7 +84,6 @@ class _InputsLogin extends StatelessWidget {
               controller: viewModel.email,
               keyboardType: TextInputType.emailAddress,
               label: "Email",
-              errorText: viewModel.errorMessage,
               isPassword: false,
               onChanged: (_) => viewModel.loginButtonValidation(),
             ),
@@ -92,7 +91,6 @@ class _InputsLogin extends StatelessWidget {
               controller: viewModel.password,
               keyboardType: TextInputType.visiblePassword,
               label: "Contraseña",
-              errorText: viewModel.errorMessage,
               isPassword: true,
               isObscure: viewModel.isObscure,
               onPressed: () => viewModel.passwordVisibility(),
@@ -125,13 +123,19 @@ class _LoginButtons extends StatelessWidget {
                   viewModel.isEnabled
                       ? () async {
                         await viewModel.loginWithEmail();
-                        if (viewModel.errorMessage == null &&
-                            viewModel.user != null) {
+                        if (viewModel.user != null) {
                           Navigator.pushNamed(context, '/loading');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Bienvenido ${viewModel.user!.user}',
+                              ),
+                            ),
+                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(viewModel.errorMessage ?? 'Error'),
+                              content: Text(viewModel.errorService ?? 'Error'),
                             ),
                           );
                         }
@@ -168,11 +172,14 @@ class _SocialMediaButtons extends StatelessWidget {
                 listen: false,
               );
               await viewModel.loginWithSocial();
-              if (viewModel.errorMessage == null && viewModel.user != null) {
+              if (viewModel.user != null) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(viewModel.message!)));
                 Navigator.pushNamed(context, '/loading');
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(viewModel.errorMessage ?? 'Error')),
+                  SnackBar(content: Text(viewModel.errorService ?? 'Error')),
                 );
               }
             },

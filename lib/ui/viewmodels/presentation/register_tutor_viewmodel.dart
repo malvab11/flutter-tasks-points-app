@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mission_up/core/utils/firebase_error_mapper.dart';
 import 'package:mission_up/domain/entity/user_entity.dart';
-import 'package:mission_up/domain/usecases/auth/generate_family_code_usecase.dart';
 import 'package:mission_up/domain/usecases/auth/register_with_email_usecase.dart';
-import 'package:mission_up/domain/usecases/auth/save_family_code_usecase.dart';
 
 class RegisterTutorViewModel extends ChangeNotifier {
   // Controllers
@@ -15,14 +13,8 @@ class RegisterTutorViewModel extends ChangeNotifier {
 
   // Use cases
   final RegisterWithEmailUseCase _registerWithEmailUsecase;
-  final GenerateFamilyCodeUsecase _generateCodeUsecase;
-  final SaveFamilyCodeUsecase _saveFamilyCodeUsecase;
 
-  RegisterTutorViewModel(
-    this._registerWithEmailUsecase,
-    this._generateCodeUsecase,
-    this._saveFamilyCodeUsecase,
-  );
+  RegisterTutorViewModel(this._registerWithEmailUsecase);
 
   // Estado
   String _errorMessage = "";
@@ -52,18 +44,18 @@ class RegisterTutorViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setErrorFromException(Object? error) {
+  void _setErrorFirebase(Object? error) {
     _errorService = FirebaseErrorMapper.getMessage(error);
     notifyListeners();
   }
 
-  void _setErrorMessage(String? error) {
+  void _setErrorValidation(String? error) {
     _errorMessage = error ?? '';
     notifyListeners();
   }
 
-  void _setMessage(String message) {
-    _errorMessage = message;
+  void _setMessage(String? message) {
+    _message = message ?? '';
     notifyListeners();
   }
 
@@ -78,16 +70,21 @@ class RegisterTutorViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Validación de contraseña con r contraseña
   bool passwordValidation() {
     if (_passwordController.text == _rpasswordController.text) {
-      _setErrorMessage(null);
+      _setErrorValidation(null);
       return true;
+    } else if (_passwordController.text.length < 6) {
+      _setErrorValidation("Contraseña menor a 6 digitos");
+      return false;
     } else {
-      _setErrorMessage("Las contraseñas no coinciden, volver a intentar");
+      _setErrorValidation("Las contraseñas no coinciden, volver a intentar");
       return false;
     }
   }
 
+  // Toogle de contraseña
   void passwordVisibility() {
     _isObscure = !_isObscure;
     notifyListeners();
@@ -96,35 +93,27 @@ class RegisterTutorViewModel extends ChangeNotifier {
   //Función principal de registro
   Future<void> registerTutor() async {
     _setLoading(true);
-    _setErrorFromException(null);
-
+    _setErrorFirebase(null);
+    _setMessage(null);
+    _user = null;
     try {
-      // 1. Registrar el tutor
       final userEntity = await _registerWithEmailUsecase(
         email: _emailController.text.trim(),
         user: _userController.text.trim(),
         password: _passwordController.text.trim(),
-        rol: 'tutor',
       );
-
-      // 2. Generar código de invitación (6 dígitos aleatorios)
-      final code = await _generateCodeUsecase();
-
-      // 3. Guardar el código en la colección 'familys'
-      await _saveFamilyCodeUsecase(code: code, uidTutor: userEntity.uid);
-
       _user = userEntity;
     } on FirebaseAuthException catch (e) {
-      _setErrorFromException(e.code);
-      _user = null;
+      _setErrorFirebase(e.code);
     } catch (e) {
-      _setErrorFromException(e.toString());
-      _user = null;
+      _setMessage(e.toString());
     } finally {
       _setLoading(false);
+      _setMessage("Usuario creado con exito");
     }
   }
 
+  //Limpieza de los controllers
   void clearControllers() {
     _userController.clear();
     _emailController.clear();

@@ -1,60 +1,51 @@
 import 'package:mission_up/domain/entity/user_entity.dart';
 
 class UserModel {
-  final String uid;
+  final String id; //uid que devuelve firebase
   final String email;
-  final String? user;
-  final String? photoUrl;
+  final String user;
   final String rol; // 'tutor' o 'user'
-  final String? codigoFamilia; // Código de invitación si aplica
+  final String familyCode; // Código de invitación si aplica
 
   UserModel({
-    required this.uid,
+    required this.id,
     required this.email,
-    this.user,
-    this.photoUrl,
+    required this.user,
     required this.rol,
-    this.codigoFamilia,
+    required this.familyCode,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> firebase, String userId) {
+  factory UserModel.fromJson(Map<String, dynamic> json, String userId) {
     return UserModel(
-      uid: userId,
-      email: firebase['email'] ?? '',
-      user: firebase['user'],
-      photoUrl: firebase['photoUrl'],
-      rol: firebase['rol'] ?? 'user',
-      codigoFamilia: firebase['codigoFamilia'],
+      id: userId,
+      email: json['email'] ?? '',
+      user: json['user'],
+      rol: json['rol'] ?? 'user',
+      familyCode: json['familyCode'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'user': user,
-      'email': email,
-      'rol': rol,
-      'photoUrl': photoUrl,
-      'codigoFamilia': codigoFamilia,
-    };
+    return {'user': user, 'email': email, 'rol': rol, 'familyCode': familyCode};
   }
 
   UserEntity toEntity() {
     return UserEntity(
-      uid: uid,
+      id: id,
       email: email,
       user: user,
       rol: rol,
-      photoUrl: photoUrl,
+      familyCode: familyCode,
     );
   }
 
   factory UserModel.fromEntity(UserEntity userEntity) {
     return UserModel(
-      uid: userEntity.uid,
+      id: userEntity.id,
       user: userEntity.user,
       email: userEntity.email,
       rol: userEntity.rol,
-      photoUrl: userEntity.photoUrl,
+      familyCode: userEntity.familyCode,
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/widgets/common_activity_card.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final String user;
+  final String? email;
+  const ProfileScreen({super.key, required this.user, this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class ProfileScreen extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: Text('Perfil', style: TextStyles.title),
             ),
-            _HeaderProfile(),
+            _HeaderProfile(user: user, email: email),
             _ProfileBody(),
           ],
         ),
@@ -29,6 +31,9 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _HeaderProfile extends StatelessWidget {
+  final String user;
+  final String? email;
+  const _HeaderProfile({required this.user, required this.email});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,8 +48,9 @@ class _HeaderProfile extends StatelessWidget {
         ),
         Column(
           children: [
-            Text('Marlon Alva', style: TextStyles.title),
-            Text('marlonalvab@hotmail.com', style: TextStyles.normalText),
+            Text(user, style: TextStyles.title),
+            if (email != null && email!.isNotEmpty)
+              Text(email!, style: TextStyles.normalText),
           ],
         ),
       ],

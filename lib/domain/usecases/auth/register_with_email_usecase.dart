@@ -10,13 +10,11 @@ class RegisterWithEmailUseCase {
     required String email,
     required String user,
     required String password,
-    required String rol,
   }) {
     return repository.registerWithEmail(
       email: email,
       user: user,
       password: password,
-      rol: rol,
     );
   }
 }

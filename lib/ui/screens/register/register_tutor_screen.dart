@@ -122,10 +122,11 @@ class _RegisterButtons extends StatelessWidget {
                       ? () async {
                         await viewModel.registerTutor();
                         if (viewModel.registeredUser != null) {
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text('holi')));
-                          //Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(viewModel.message)),
+                          );
+                          Navigator.pop(context);
+                          viewModel.clearControllers();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(viewModel.errorService)),

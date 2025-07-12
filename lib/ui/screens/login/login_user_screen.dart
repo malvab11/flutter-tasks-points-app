@@ -62,14 +62,14 @@ class _InputsRegister extends StatelessWidget {
           spacing: 20,
           children: [
             CommonInputs(
-              controller: viewModel.user,
+              controller: viewModel.userData,
               keyboardType: TextInputType.text,
               label: "Nombres y Apellidos",
               isPassword: false,
               onChanged: (_) => viewModel.loginButtonValidation(),
             ),
             CommonInputs(
-              controller: viewModel.code,
+              controller: viewModel.familyCode,
               keyboardType: TextInputType.number,
               label: "Código de Invitación",
               isPassword: false,
@@ -94,8 +94,20 @@ class _LoginUserButtons extends StatelessWidget {
           fondo: AppColors.greenColor,
           onPressed:
               viewModel.isEnabled
-                  ? () {
-                    Navigator.pushNamed(context, '/loading');
+                  ? () async {
+                    await viewModel.loginWithCode();
+                    if (viewModel.user != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(viewModel.message!)),
+                      );
+                      Navigator.pushNamed(context, '/loading');
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(viewModel.errorService ?? 'Error'),
+                        ),
+                      );
+                    }
                   }
                   : null,
         ),

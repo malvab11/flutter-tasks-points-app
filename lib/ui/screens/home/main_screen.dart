@@ -7,17 +7,18 @@ import 'package:mission_up/ui/viewmodels/main/main_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
-  final List<Widget> _screens = [
-    InitScreen(),
-    ActivitiesScreen(),
-    ProfileScreen(),
-  ];
-
-  MainScreen({super.key});
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<MainViewmodel>();
+
+    if (viewModel.user == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<MainViewmodel>().loadUser();
+      });
+      return const Center(child: CircularProgressIndicator());
+    }
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: _MyButtonNavigationBar(viewModel: viewModel),
@@ -30,7 +31,20 @@ class MainScreen extends StatelessWidget {
                   child: Icon(Icons.add, color: AppColors.whiteColor),
                 )
                 : null,
-        body: IndexedStack(index: viewModel.currentScreen, children: _screens),
+        body: IndexedStack(
+          index: viewModel.currentScreen,
+          children: [
+            InitScreen(
+              user: viewModel.user!.user,
+              code: viewModel.user!.familyCode,
+            ),
+            ActivitiesScreen(),
+            ProfileScreen(
+              user: viewModel.user!.user,
+              email: viewModel.user!.email,
+            ),
+          ],
+        ),
       ),
     );
   }
