@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/di/service_locator.dart';
+import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
-import 'package:mission_up/ui/viewmodels/home/task_type_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
 import 'package:mission_up/ui/widgets/common_activity_card.dart';
 import 'package:mission_up/ui/widgets/common_inputs.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +13,15 @@ class ActivitiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) {
-        final viewModel = di<TaskTypeViewmodel>();
-        viewModel.init(uid!); // carga inicial
-        return viewModel;
-      },
-      child: const _ActivitiesScreenBody(),
-    );
+    // Inicializa solo una vez después del primer frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final viewModel = context.read<ActivitiesViewModel>();
+      if (viewModel.uid.isEmpty) {
+        viewModel.init(uid!);
+      }
+    });
+
+    return const _ActivitiesScreenBody();
   }
 }
 
@@ -28,7 +30,7 @@ class _ActivitiesScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<TaskTypeViewmodel>();
+    final viewModel = context.watch<ActivitiesViewModel>();
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -58,7 +60,7 @@ class _ActivitiesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.read<TaskTypeViewmodel>();
+    final viewModel = context.read<ActivitiesViewModel>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -82,7 +84,7 @@ class _ActivitiesBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskTypeViewmodel>(
+    return Consumer<ActivitiesViewModel>(
       builder: (_, viewModel, __) {
         return SingleChildScrollView(
           child: Column(
@@ -134,10 +136,19 @@ class _ActivitySection extends StatelessWidget {
                 final activity = activities[index];
                 return CommonTutorActivityCard(
                   text: activity.title,
-                  icon:
-                      Icons
-                          .monetization_on, // puedes personalizar esto por tipo
-                  onTap: () {},
+                  icon: Icons.monetization_on,
+                  score: activity.score,
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      AppRoutes.createActivity,
+                      arguments: activity,
+                    );
+                    if (result == true) {
+                      context.read<ActivitiesViewModel>().getTasksList();
+                    }
+                  },
+                  onLongPress: () {},
                 );
               },
             ),

@@ -8,7 +8,9 @@ class TaskTypeDatasourceImpl extends TaskTypeDatasource {
   @override
   Future<void> createTaskType({required TaskTypeModel taskType}) async {
     try {
-      await _firestore.collection('task_types').add(taskType.toJson());
+      await _firestore
+          .collection('task_types')
+          .add(taskType.toJson(isCreated: true));
     } catch (e) {
       throw AuthException(message: 'Error al intentar crear la tarea: $e');
     }
@@ -24,7 +26,7 @@ class TaskTypeDatasourceImpl extends TaskTypeDatasource {
               .orderBy('createdAt', descending: true)
               .get();
       return tasksDoc.docs
-          .map((it) => TaskTypeModel.fromJson(it.data()))
+          .map((it) => TaskTypeModel.fromJson(it.data(), it.id))
           .toList();
     } catch (e) {
       throw AuthException(message: 'Error al conseguir la lista de actividad');

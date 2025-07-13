@@ -16,8 +16,9 @@ import 'package:mission_up/domain/usecases/auth/register_with_email_usecase.dart
 import 'package:mission_up/domain/usecases/task_types/create_tasks_types_usecase.dart';
 import 'package:mission_up/domain/usecases/task_types/get_tasks_types_usecase.dart';
 import 'package:mission_up/domain/usecases/task_types/update_task_types_usecase.dart';
+import 'package:mission_up/ui/viewmodels/home/create_activities_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/main_viewmodel.dart';
-import 'package:mission_up/ui/viewmodels/home/task_type_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';
@@ -50,7 +51,6 @@ void initServiceLocator() {
   di.registerLazySingleton(() => UpdateTaskTypesUsecase(di()));
 
   //ViewModels
-  di.registerFactory(() => MainViewmodel());
   di.registerFactory(() => PresentationViewmodel());
   di.registerFactory(() => LoginUserViewmodel(di<LoginWithCodeUsecase>()));
   di.registerFactory(
@@ -62,11 +62,13 @@ void initServiceLocator() {
       di<LoginWithSocialUsecase>(),
     ),
   );
+  di.registerFactory(() => MainViewmodel(di<GetCurrentUserUseCase>()));
+  di.registerFactory(() => ActivitiesViewModel(di<GetTasksTypesUsecase>()));
   di.registerFactory(
-    () => TaskTypeViewmodel(
-      di<GetTasksTypesUsecase>(),
+    () => CreateActivitiesViewmodel(
       di<CreateTasksTypesUsecase>(),
       di<UpdateTaskTypesUsecase>(),
+      di<GetCurrentUserUseCase>(),
     ),
   );
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/di/service_locator.dart';
+import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/screens/home/activities/activities_screen.dart';
 import 'package:mission_up/ui/screens/home/init/init_screen.dart';
 import 'package:mission_up/ui/screens/home/profile/profile_screen.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
+import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/main_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +30,7 @@ class MainScreen extends StatelessWidget {
 
     if (viewModel.user == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<MainViewmodel>().loadUser();
+        context.read<MainViewmodel>().getCurrentUser();
       });
       return const Center(child: CircularProgressIndicator());
     }
@@ -38,8 +40,17 @@ class MainScreen extends StatelessWidget {
         floatingActionButton:
             viewModel.currentScreen == 1
                 ? FloatingActionButton(
-                  onPressed:
-                      () => Navigator.pushNamed(context, '/createActivity'),
+                  onPressed: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      AppRoutes.createActivity,
+                    );
+                    if (result == true) {
+                      final activityViewModel =
+                          context.read<ActivitiesViewModel>();
+                      await activityViewModel.getTasksList();
+                    }
+                  },
                   backgroundColor: AppColors.greenColor,
                   child: Icon(Icons.add, color: AppColors.whiteColor),
                 )

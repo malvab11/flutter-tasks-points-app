@@ -3,8 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mission_up/data/models/user_model.dart';
 import 'package:mission_up/domain/entity/user_entity.dart';
+import 'package:mission_up/domain/usecases/auth/get_current_user_usecase.dart';
 
 class MainViewmodel extends ChangeNotifier {
+  GetCurrentUserUseCase _getCurrentUserUseCase;
+
+  MainViewmodel(this._getCurrentUserUseCase);
+
   int _currentScreen = 0;
   UserEntity? _user;
 
@@ -16,20 +21,8 @@ class MainViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadUser() async {
-    final firebaseUser = FirebaseAuth.instance.currentUser;
-    if (firebaseUser != null) {
-      final currentUser =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(firebaseUser.uid)
-              .get();
-      final data = currentUser.data();
-      debugPrint(data.toString());
-      if (data != null) {
-        _user = UserModel.fromJson(data, currentUser.id).toEntity();
-        notifyListeners();
-      }
-    }
+  Future<void> getCurrentUser() async {
+    _user = await _getCurrentUserUseCase();
+    notifyListeners();
   }
 }

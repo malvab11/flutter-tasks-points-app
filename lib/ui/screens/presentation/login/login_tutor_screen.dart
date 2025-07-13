@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/di/service_locator.dart';
+import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';
@@ -117,7 +118,7 @@ class _LoginButtons extends StatelessWidget {
                       ? () async {
                         await viewModel.loginWithEmail();
                         if (viewModel.user != null) {
-                          Navigator.pushNamed(context, '/loading');
+                          Navigator.pushNamed(context, AppRoutes.loading);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -139,7 +140,7 @@ class _LoginButtons extends StatelessWidget {
           texto: "Registrarme",
           fondo: AppColors.coinColor,
           onPressed: () {
-            Navigator.pushNamed(context, '/registerTutor');
+            Navigator.pushNamed(context, AppRoutes.registerTutor);
             viewModel.clearControllers();
           },
         ),

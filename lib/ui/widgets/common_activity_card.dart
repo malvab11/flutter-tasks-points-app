@@ -139,20 +139,25 @@ class CommonUserCard extends StatelessWidget {
 
 class CommonTutorActivityCard extends StatelessWidget {
   final String text;
+  final int score;
   final IconData icon;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
   const CommonTutorActivityCard({
     super.key,
     required this.text,
+    required this.score,
     required this.icon,
     required this.onTap,
+    this.onLongPress,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.blackColor,
@@ -165,7 +170,7 @@ class CommonTutorActivityCard extends StatelessWidget {
             Text(text, style: TextStyles.normalText),
             Row(
               children: [
-                Text('2', style: TextStyles.coins),
+                Text(score.toString(), style: TextStyles.coins),
                 const SizedBox(width: 12),
                 const Icon(
                   Icons.monetization_on_sharp,

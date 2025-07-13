@@ -1,33 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mission_up/core/errors/AuthExceptions.dart';
 import 'package:mission_up/domain/entity/task_type_entity.dart';
-import 'package:mission_up/domain/usecases/task_types/create_tasks_types_usecase.dart';
 import 'package:mission_up/domain/usecases/task_types/get_tasks_types_usecase.dart';
-import 'package:mission_up/domain/usecases/task_types/update_task_types_usecase.dart';
 
-class TaskTypeViewmodel extends ChangeNotifier {
+class ActivitiesViewModel extends ChangeNotifier {
   final TextEditingController _searchController = TextEditingController();
 
   final GetTasksTypesUsecase _getTasksTypesUsecase;
-  final CreateTasksTypesUsecase _createTasksTypesUsecase;
-  final UpdateTaskTypesUsecase _updateTaskTypesUsecase;
 
-  TaskTypeViewmodel(
-    this._getTasksTypesUsecase,
-    this._createTasksTypesUsecase,
-    this._updateTaskTypesUsecase,
-  );
+  ActivitiesViewModel(this._getTasksTypesUsecase);
 
+  //Variables
   bool _isLoading = false;
   String _uid = '';
   String _errorService = '';
   List<TaskTypeEntity> _allTasks = [];
   List<TaskTypeEntity> _filteredTasks = [];
 
+  //Getters
+  TextEditingController get search => _searchController;
   bool get isLoading => _isLoading;
   String get uid => _uid;
-  String? get errorService => _errorService.isNotEmpty ? _errorService : null;
-  TextEditingController get search => _searchController;
+  String? get errorService => _errorService;
   List<TaskTypeEntity>? get tasksFiltered => _filteredTasks;
 
   void _setLoading(bool value) {
@@ -83,38 +78,10 @@ class TaskTypeViewmodel extends ChangeNotifier {
     return _filteredTasks.where((task) => task.type == type).toList();
   }
 
-  Future<void> createTaskType(TaskTypeEntity task) async {
-    _setLoading(true);
-    _setError(null);
-    try {
-      await _createTasksTypesUsecase(taskType: task);
-      await getTasksList();
-    } catch (e) {
-      _setError(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> updateTaskType(
-    String taskTypeId,
-    Map<String, dynamic> data,
-    String uid,
-  ) async {
-    _setLoading(true);
-    _setError(null);
-    try {
-      await _updateTaskTypesUsecase(taskTypeId: taskTypeId, data: data);
-      await getTasksList();
-    } catch (e) {
-      _setError(e.toString());
-    } finally {
-      _setLoading(false);
-    }
-  }
-
+  //Clear Controllers
   void clearControllers() {
     _searchController.clear();
+    _setLoading(false);
     notifyListeners();
   }
 }
