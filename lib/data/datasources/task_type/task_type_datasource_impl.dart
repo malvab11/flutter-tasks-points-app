@@ -8,9 +8,41 @@ class TaskTypeDatasourceImpl extends TaskTypeDatasource {
   @override
   Future<void> createTaskType({required TaskTypeModel taskType}) async {
     try {
-      await _firestore
+      //Creacin de la actividad
+      final docRef = await _firestore
           .collection('task_types')
           .add(taskType.toJson(isCreated: true));
+
+      //Obtención del id de la activdad
+      final taskId = docRef.id;
+
+      //Obtención del codigo de familia del tutor
+      final familyTutorDoc =
+          await _firestore.collection('users').doc(taskType.createdBy).get();
+
+      final familyCode = familyTutorDoc['familyCode'];
+
+      //Buscar a los usuarios con el codigo de familia
+      final users =
+          await _firestore
+              .collection('users')
+              .where('familyCode', isEqualTo: familyCode)
+              .where('rol', isEqualTo: 'user')
+              .get();
+
+      //Asignar la tarea a cada alumno
+      for (final user in users.docs) {
+        await _firestore
+            .collection('studens')
+            .doc(user.id)
+            .collection('assigned_tasks')
+            .doc(taskId)
+            .set({
+              ...taskType.toJson(),
+              'isCompleted': false,
+              'completedAt': null,
+            });
+      }
     } catch (e) {
       throw AuthException(message: 'Error al intentar crear la tarea: $e');
     }
