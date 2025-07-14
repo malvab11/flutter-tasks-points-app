@@ -25,9 +25,9 @@ class MyApp extends StatelessWidget {
       title: 'Mission Up',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.dark()),
-      initialRoute: '/',
+      initialRoute: '/presentation',
       routes: {
-        '/':
+        '/presentation':
             (context) => ChangeNotifierProvider(
               create: (_) => di<PresentationViewmodel>(),
               child: const PresentationScreen(),

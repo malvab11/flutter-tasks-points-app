@@ -19,6 +19,7 @@ import 'package:mission_up/domain/usecases/task_types/update_task_types_usecase.
 import 'package:mission_up/ui/viewmodels/home/create_activities_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/main_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/home/profile_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_tutor_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/login_user_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';
@@ -76,4 +77,5 @@ void initServiceLocator() {
       di<GetCurrentUserUseCase>(),
     ),
   );
+  di.registerFactory(() => ProfileViewModel(di<LogOutUseCase>()));
 }

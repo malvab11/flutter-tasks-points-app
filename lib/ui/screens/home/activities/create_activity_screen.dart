@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/domain/entity/task_type_entity.dart';
-import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
-import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/create_activities_viewmodel.dart';
 import 'package:mission_up/ui/widgets/common_activity_card.dart';
 import 'package:mission_up/ui/widgets/common_button.dart';

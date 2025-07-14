@@ -15,6 +15,8 @@ class PresentationScreen extends StatefulWidget {
 }
 
 class _PresentationScreenState extends State<PresentationScreen> {
+  late PresentationViewmodel _viewmodel;
+
   final List<Widget> _pages = const [
     FirstPresentationScreen(),
     SecondPresentationScreen(),
@@ -22,18 +24,22 @@ class _PresentationScreenState extends State<PresentationScreen> {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewmodel = context.read<PresentationViewmodel>();
+  }
+
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PresentationViewmodel>().startCarrousel(
-        pages: _pages.length,
-      );
+      _viewmodel.startCarrousel(pages: _pages.length);
     });
   }
 
   @override
   void dispose() {
-    context.read<PresentationViewmodel>().disposeValues();
+    _viewmodel.disposeValues();
     super.dispose();
   }
 

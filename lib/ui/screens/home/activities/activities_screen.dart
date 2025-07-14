@@ -42,8 +42,8 @@ class _ActivitiesScreenBody extends StatelessWidget {
           // Muestra el estado correspondiente
           if (viewModel.isLoading)
             const Expanded(child: Center(child: CircularProgressIndicator()))
-          else if (viewModel.errorService?.isNotEmpty == true)
-            Expanded(child: Center(child: Text(viewModel.errorService!)))
+          else if (viewModel.errorService.isNotEmpty == true)
+            Expanded(child: Center(child: Text(viewModel.errorService)))
           else
             const Expanded(child: _ActivitiesBody()),
         ],

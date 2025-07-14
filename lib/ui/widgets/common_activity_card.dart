@@ -73,9 +73,10 @@ class CommonRewardsCard extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 10,
           children: [
             Text(rewards.score.toString(), style: TextStyles.coins),
-            Icon(Icons.currency_bitcoin, color: AppColors.coinColor),
+            Icon(Icons.monetization_on_sharp, color: AppColors.coinColor),
           ],
         ),
       ],
