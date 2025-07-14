@@ -122,7 +122,7 @@ class _BodyCreateActivity extends StatelessWidget {
       spacing: 20,
       children: [
         CommonCard(
-          text: viewModel.selectedType ?? '',
+          text: viewModel.selectedType ?? 'Tipo de Actividad',
           icon: Icons.keyboard_arrow_down_sharp,
           onTap: () async {
             final selected = await showDialog<String>(

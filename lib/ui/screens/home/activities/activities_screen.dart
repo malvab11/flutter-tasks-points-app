@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mission_up/di/service_locator.dart';
 import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
@@ -13,10 +12,10 @@ class ActivitiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inicializa solo una vez después del primer frame
+    // Inicializa el ViewModel una vez tras el primer frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = context.read<ActivitiesViewModel>();
-      if (viewModel.uid.isEmpty) {
+      if (viewModel.uid.isEmpty && uid != null) {
         viewModel.init(uid!);
       }
     });
@@ -38,9 +37,9 @@ class _ActivitiesScreenBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ActivitiesHeader(controller: viewModel.search),
-
           const SizedBox(height: 20),
 
+          // Muestra el estado correspondiente
           if (viewModel.isLoading)
             const Expanded(child: Center(child: CircularProgressIndicator()))
           else if (viewModel.errorService?.isNotEmpty == true)
@@ -120,6 +119,8 @@ class _ActivitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.read<ActivitiesViewModel>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -144,11 +145,53 @@ class _ActivitySection extends StatelessWidget {
                       AppRoutes.createActivity,
                       arguments: activity,
                     );
-                    if (result == true) {
-                      context.read<ActivitiesViewModel>().getTasksList();
+                    // Refresca la lista solo si se ha modificado algo
+                    if (result == true && context.mounted) {
+                      await viewModel.getTasksList();
                     }
                   },
-                  onLongPress: () {},
+                  onLongPress: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder:
+                          (context) => AlertDialog(
+                            title: const Text('¿Eliminar actividad?'),
+                            content: Text(
+                              '¿Estás seguro de eliminar: "${activity.title}"?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed:
+                                    () => Navigator.of(context).pop(false),
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed:
+                                    () => Navigator.of(context).pop(true),
+                                child: const Text(
+                                  'Eliminar',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          ),
+                    );
+
+                    if (confirm != true) return; // Si el usuario cancela
+
+                    // Aquí eliminas
+                    await viewModel.updateTaskType(activity.id);
+
+                    if (!context.mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          viewModel.message ?? viewModel.errorService,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             ),

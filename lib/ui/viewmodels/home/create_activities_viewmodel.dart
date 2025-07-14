@@ -30,7 +30,7 @@ class CreateActivitiesViewmodel extends ChangeNotifier {
   TaskTypeEntity? _activity;
   UserEntity? _user;
   List<String> _typeActivities = ['Tareas', 'Premios', 'Castigos'];
-  String? _selectedType = null;
+  String? _selectedType;
 
   //Getters
   TextEditingController get titleController => _titleController;

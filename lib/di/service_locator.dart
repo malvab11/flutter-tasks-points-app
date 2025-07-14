@@ -63,7 +63,12 @@ void initServiceLocator() {
     ),
   );
   di.registerFactory(() => MainViewmodel(di<GetCurrentUserUseCase>()));
-  di.registerFactory(() => ActivitiesViewModel(di<GetTasksTypesUsecase>()));
+  di.registerFactory(
+    () => ActivitiesViewModel(
+      di<GetTasksTypesUsecase>(),
+      di<UpdateTaskTypesUsecase>(),
+    ),
+  );
   di.registerFactory(
     () => CreateActivitiesViewmodel(
       di<CreateTasksTypesUsecase>(),
