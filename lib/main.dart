@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mission_up/features/loading/screens/loading_screen.dart';
-import 'package:mission_up/features/login/screens/login_screen.dart';
-import 'package:mission_up/features/presentation/screens/presentation_screen.dart';
-import 'package:mission_up/features/register_tutor/screens/register_tutor_screen.dart';
-import 'package:mission_up/features/register_user/screens/register_user_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mission_up/di/service_locator.dart';
+import 'package:mission_up/firebase_options.dart';
+import 'package:mission_up/ui/routes/app_routes.dart';
+import 'package:mission_up/ui/screens/presentation/carrousel_screens/presentation_screen.dart';
+import 'package:mission_up/ui/viewmodels/presentation/presentation_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  initServiceLocator();
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -17,13 +24,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mission Up',
       debugShowCheckedModeBanner: false,
-      initialRoute: 'loading',
+      theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.dark()),
+      initialRoute: '/presentation',
       routes: {
-        'loading': (context) => const LoadingScreen(),
-        'presentation': (context) => const PresentationScreen(),
-        'login': (context) => const LoginScreen(),
-        'registerTutor': (context) => const RegisterTutorScreen(),
-        'registerUser': (context) => const RegisterUserScreen(),
+        '/presentation':
+            (context) => ChangeNotifierProvider(
+              create: (_) => di<PresentationViewmodel>(),
+              child: const PresentationScreen(),
+            ),
+        ...AppRoutes.routes,
       },
     );
   }
