@@ -17,6 +17,7 @@ import 'package:mission_up/domain/usecases/task_types/create_tasks_types_usecase
 import 'package:mission_up/domain/usecases/task_types/get_tasks_types_usecase.dart';
 import 'package:mission_up/domain/usecases/task_types/update_task_types_usecase.dart';
 import 'package:mission_up/ui/viewmodels/home/create_activities_viewmodel.dart';
+import 'package:mission_up/ui/viewmodels/home/init_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/main_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/activities_viewmodel.dart';
 import 'package:mission_up/ui/viewmodels/home/profile_viewmodel.dart';
@@ -64,6 +65,7 @@ void initServiceLocator() {
     ),
   );
   di.registerFactory(() => MainViewmodel(di<GetCurrentUserUseCase>()));
+  di.registerFactory(() => InitViewmodel());
   di.registerFactory(
     () => ActivitiesViewModel(
       di<GetTasksTypesUsecase>(),

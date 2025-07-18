@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mission_up/di/service_locator.dart';
-import 'package:mission_up/ui/routes/app_routes.dart';
 import 'package:mission_up/ui/styles/app_colors.dart';
 import 'package:mission_up/ui/styles/text_styles.dart';
 import 'package:mission_up/ui/viewmodels/home/profile_viewmodel.dart';
